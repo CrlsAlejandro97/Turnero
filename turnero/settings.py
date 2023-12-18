@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'api'
 ]
 
@@ -74,12 +75,30 @@ WSGI_APPLICATION = 'turnero.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'sql_server.pyodbc',
+        'NAME': 'DB_NAME',
+        'USER': 'DB_USER',
+        'PASSWORD': 'DB_PASSWORD',
+        'HOST': 'DB_HOST',
+        'PORT': 'DB_PORT',
+        'OPTIONS': {
+            'driver': 'ODBC Driver 18 for SQL Server',
+        },
     }
 }
+
+
+# Configuración de pyodbc para Azure
+import pyodbc
+from decouple import config
+
+pyodbc.autocommit = True
+AZURE_ODBC_CONNECTION_STRING = config('AZURE_ODBC_CONNECTION_STRING', default='')
+DATABASES['default']['OPTIONS']['connection_string'] = AZURE_ODBC_CONNECTION_STRING
+
 
 
 # Password validation
